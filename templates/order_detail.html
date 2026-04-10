@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Заявка №{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"><i class="bi bi-clipboard"></i> Заявка №{{ order.id }}</h4>
+        <span class="badge bg-light text-dark">{{ order.status }}</span>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Информация о клиенте</h5>
+                <p><strong>Имя:</strong> {{ order.client_name }}</p>
+                <p><strong>Телефон:</strong> {{ order.client_phone }}</p>
+                <p><strong>Email:</strong> {{ order.client_email or 'не указан' }}</p>
+            </div>
+            <div class="col-md-6">
+                <h5>Информация об устройстве</h5>
+                <p><strong>Модель:</strong> {{ order.device_model }}</p>
+                <p><strong>Серийный номер:</strong> {{ order.serial_number or 'не указан' }}</p>
+                <p><strong>Описание проблемы:</strong><br>{{ order.problem_description }}</p>
+            </div>
+        </div>
+
+        {% if order.photos %}
+        <hr>
+        <h5>Фотографии устройства</h5>
+        <div class="d-flex flex-wrap">
+            {% for photo in order.photos %}
+                <img src="{{ url_for('static', filename='uploads/' + photo.filename) }}" class="photo-thumb" alt="Фото">
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if order.history %}
+        <hr>
+        <h5>История изменений статуса</h5>
+        <ul class="list-group">
+            {% for entry in order.history %}
+            <li class="list-group-item">
+                <strong>{{ entry.timestamp.strftime('%d.%m.%Y %H:%M') }}</strong>:
+                {{ entry.status_from }} → {{ entry.status_to }}
+                {% if entry.comment %}<br><small class="text-muted">{{ entry.comment }}</small>{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <hr>
+        <a href="{{ url_for('cabinet') }}" class="btn btn-outline-secondary">← Назад в личный кабинет</a>
+    </div>
+</div>
+{% endblock %}
