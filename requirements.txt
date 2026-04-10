@@ -1,0 +1,11 @@
+Flask==2.3.3
+Flask-SQLAlchemy==3.0.5
+Flask-Login==0.6.2
+Flask-Mail==0.9.1
+Flask-Uploads==0.2.1
+Flask-Migrate==4.0.4
+Flask-RESTful==0.3.10
+Werkzeug==2.3.7
+Pillow==10.0.0
+python-dotenv==1.0.0
+gunicorn==21.2.0
