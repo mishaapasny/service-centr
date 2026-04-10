@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Админ-панель{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-speedometer2"></i> Панель управления</h2>
+    <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-danger">Выйти</a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body text-center">
+                <i class="bi bi-clipboard" style="font-size: 40px;"></i>
+                <h3 class="mt-2">{{ orders_count }}</h3>
+                <p>Всего заявок</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body text-center">
+                <i class="bi bi-box" style="font-size: 40px;"></i>
+                <h3 class="mt-2">{{ parts_count }}</h3>
+                <p>Комплектующих</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <i class="bi bi-plus-circle"></i> Добавить комплектующее
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_part') }}">
+                    <div class="mb-2">
+                        <input type="text" name="name" class="form-control form-control-sm" placeholder="Название" required>
+                    </div>
+                    <div class="mb-2">
+                        <input type="text" name="article" class="form-control form-control-sm" placeholder="Артикул">
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col">
+                            <input type="number" name="price" class="form-control form-control-sm" placeholder="Цена" step="0.01">
+                        </div>
+                        <div class="col">
+                            <input type="number" name="quantity" class="form-control form-control-sm" placeholder="Кол-во">
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <textarea name="description" class="form-control form-control-sm" placeholder="Описание" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-info btn-sm w-100">Добавить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-warning d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-list"></i> Последние заявки</span>
+                <form method="get" class="d-flex">
+                    <input type="text" name="q" class="form-control form-control-sm me-1" placeholder="Поиск..." value="{{ search_query }}">
+                    <button class="btn btn-sm btn-outline-dark" type="submit">🔍</button>
+                </form>
+            </div>
+            <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                {% for order in recent_orders %}
+                <div class="border-bottom pb-2 mb-2">
+                    <div class="d-flex justify-content-between">
+                        <strong>#{{ order.id }} - {{ order.client_name }}</strong>
+                        <small>{{ order.created_at.strftime('%d.%m %H:%M') }}</small>
+                    </div>
+                    <div>{{ order.device_model }}</div>
+                    <div class="d-flex justify-content-between align-items-center mt-1">
+                        <span class="badge bg-{{ 'warning' if order.status == 'Принят' else 'info' if order.status == 'В работе' else 'success' if order.status == 'Готов' else 'secondary' }}">
+                            {{ order.status }}
+                        </span>
+                        <a href="{{ url_for('admin_order_detail', order_id=order.id) }}" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
