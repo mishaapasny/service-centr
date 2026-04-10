@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Комплектующие{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-box-seam"></i> Доступные комплектующие</h2>
+
+{% if parts %}
+    <div class="row">
+        {% for part in parts %}
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ part.name }}</h5>
+                    {% if part.article %}
+                        <h6 class="card-subtitle mb-2 text-muted">Артикул: {{ part.article }}</h6>
+                    {% endif %}
+                    <p class="card-text">{{ part.description }}</p>
+                    <p class="card-text">
+                        <strong>Цена: {{ part.price }} ₽</strong><br>
+                        <span class="text-{{ 'success' if part.quantity > 0 else 'danger' }}">
+                            {{ 'В наличии: ' + part.quantity|string + ' шт.' if part.quantity > 0 else 'Нет в наличии' }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">Список комплектующих пока пуст.</div>
+{% endif %}
+{% endblock %}
