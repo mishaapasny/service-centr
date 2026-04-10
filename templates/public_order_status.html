@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Проверка статуса заявки{% endblock %}
+
+{% block content %}
+<h2><i class="bi bi-search"></i> Проверка статуса заявки</h2>
+<form method="get" class="row g-3 mb-4">
+    <div class="col-auto">
+        <input type="text" name="id" class="form-control" placeholder="Номер заявки" required>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Проверить</button>
+    </div>
+</form>
+
+{% if order %}
+    <div class="card">
+        <div class="card-header">
+            Заявка №{{ order.id }} — {{ order.device_model }}
+        </div>
+        <div class="card-body">
+            <p><strong>Клиент:</strong> {{ order.client_name }}</p>
+            <p><strong>Дата создания:</strong> {{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+            <p><strong>Текущий статус:</strong> <span class="badge bg-info">{{ order.status }}</span></p>
+            {% if order.updated_at %}
+                <p><strong>Последнее обновление:</strong> {{ order.updated_at.strftime('%d.%m.%Y %H:%M') }}</p>
+            {% endif %}
+        </div>
+    </div>
+{% elif request.args.id %}
+    <div class="alert alert-warning">Заявка с таким номером не найдена.</div>
+{% endif %}
+{% endblock %}
